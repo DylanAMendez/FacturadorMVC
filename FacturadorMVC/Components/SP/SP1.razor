@@ -1,0 +1,72 @@
+﻿@page "/SP1"
+
+@rendermode InteractiveServer
+
+
+<h3>SP1</h3>
+
+
+<div>
+    <label> Fecha Desde: </label>
+    <input type="date" @bind="FechaDesde" />
+
+    <label> Fecha Hasta: </label>
+    <input type="date" @bind="FechaHasta" />
+
+    <label> IDCliente: </label>
+    <input type="int" @bind="IDCliente" />
+
+    <button @onclick="EjecturarSP"> Ejecturar SP1 </button>
+
+</div>
+
+<p style="color:orange;">@msj</p>
+
+@code
+{
+
+    DateOnly FechaDesde = new DateOnly(2023, 06, 16);
+    DateOnly FechaHasta = new DateOnly(2023, 07, 20);
+
+    int IDCliente = 0;
+
+    string msj = "";
+
+    public async Task EjecturarSP()
+    {
+        try
+        {
+            if (IDCliente == 0) return;
+
+            var FechaDesdeAEnviar = FechaDesde.ToString("yyyy-MM-dd");
+            var FechaHastaAEnviar = FechaHasta.ToString("yyyy-MM-dd");
+
+            var url = $"https://localhost:7066/api/SP/SP1/{FechaDesdeAEnviar}/{FechaHastaAEnviar}/{IDCliente}";
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var response = await httpClient.GetAsync(url);
+
+                if(response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync();
+
+                    msj = content.Result;
+                }
+                else
+                {
+                    msj = "Error";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+}

@@ -1,0 +1,118 @@
+﻿@page "/SP2"
+
+@rendermode InteractiveServer
+
+<h3>SP2</h3>
+
+<div>
+
+    <label> Fecha Desde: </label>
+    <input type="date" @bind="FechaDesde" />
+
+    <label> Fecha Hasta: </label>
+    <input type="date" @bind="FechaHasta" />
+
+    <label> IDCliente: </label>
+    <input type="int" @bind="IDCliente" />
+
+    <button @onclick="EjecturarSP"> Ejecturar SP2 </button>
+
+</div>
+
+
+@if (lsFacturaCabeceraYDetalle.Count > 0)
+{
+    @foreach (var facturaCabeceraDetalle in lsFacturaCabeceraYDetalle)
+    {
+        <br />
+
+        <div style="display:flex; flex-direction:row; gap:15px;">
+
+            <p>@facturaCabeceraDetalle.Cant</p>
+            <p>@facturaCabeceraDetalle.Moto</p>
+            <p>@facturaCabeceraDetalle.Fact_ID</p>
+            <p>@facturaCabeceraDetalle.Cli_ID</p>
+            <p>@facturaCabeceraDetalle.ART_ID</p>
+            <p>@facturaCabeceraDetalle.FechaAlta</p>
+            <p>@facturaCabeceraDetalle.FC_ID</p>
+            <p>@facturaCabeceraDetalle.Estado</p>
+
+        </div>
+
+        <br />
+
+    }
+
+}
+
+
+
+<p style="color:orange;">@msj</p>
+
+@code 
+{
+
+    DateOnly FechaDesde = new DateOnly(2023, 06, 16);
+    DateOnly FechaHasta = new DateOnly(2023, 07, 20);
+
+    List<FacturaCabeceraYDetalle> lsFacturaCabeceraYDetalle = new List<FacturaCabeceraYDetalle>();
+
+    int IDCliente = 0;
+
+    string msj = "";
+
+    public async Task EjecturarSP()
+    {
+        try
+        {
+            if (IDCliente == 0) return;
+
+            var FechaDesdeAEnviar = FechaDesde.ToString("yyyy-MM-dd");
+            var FechaHastaAEnviar = FechaHasta.ToString("yyyy-MM-dd");
+
+            var url = $"https://localhost:7066/api/SP/SP2/{FechaDesdeAEnviar}/{FechaHastaAEnviar}/{IDCliente}";
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+
+                    var options = new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        };
+
+                    lsFacturaCabeceraYDetalle = JsonSerializer.Deserialize<List<FacturaCabeceraYDetalle>>(content, options);
+                }
+                else
+                {
+                    msj = "Error";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+
+    public class FacturaCabeceraYDetalle
+    {
+        public int FC_ID { get; set; }
+        public DateOnly FechaAlta { get; set; }
+        public string Cli_ID { get; set; }
+        public string Estado { get; set; }
+        public string ART_ID { get; set; }
+        public int Fact_ID { get; set; }
+        public decimal Cant { get; set; }
+        public decimal Moto { get; set; }
+    }
+}

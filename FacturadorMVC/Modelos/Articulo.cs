@@ -7,6 +7,8 @@
         public decimal Cant { get; set; }
         public decimal Precio { get; set; }
         public decimal Moto { get; set; }
+        public int? Cli_ID { get; set; } = 0;
+        public string? Nombre { get; set; } = "";
 
 
         public string URL_GetAllArticulos() => "https://localhost:7066/api/Articulo";
