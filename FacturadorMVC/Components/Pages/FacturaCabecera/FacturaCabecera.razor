@@ -1,0 +1,84 @@
+﻿@page "/FacturaCabecera"
+
+@rendermode InteractiveServer
+@using FacturadorMVC.Modelos
+@using System.Text.Json;
+
+<h3>FacturaCabecera</h3>
+
+@if (lsFacturaCabecera.Count < 1 || lsFacturaCabecera is null)
+{
+    <p>sin clientes</p>
+}
+else
+{
+    @foreach (var facturaCabecera in lsFacturaCabecera)
+    {
+        <div style="display:flex; flex-direction: row; margin: 5px;">
+
+            <p>@facturaCabecera.FC_ID</p>
+            <p>@facturaCabecera.FechaAlta</p>
+            <p>@facturaCabecera.Cli_ID</p>
+            <p>@facturaCabecera.Estado</p>
+
+            <div>
+                <a href="/FacturaCabeceraActualizarOEliminar/@facturaCabecera.FC_ID">  Editar  </a>
+                <a href="/FacturaCabeceraActualizarOEliminar/@facturaCabecera.FC_ID">  Eliminar  </a>
+            </div>
+
+        </div>
+    }
+
+    <div>
+        <a href="/FacturaCabeceraNuevo">  Nueva factura cabecera  </a>
+    </div>
+
+}
+
+
+@code 
+{
+
+    List<Factura_Cabecera> lsFacturaCabecera = new List<Factura_Cabecera>();
+
+    Factura_Cabecera oFacturaCabecera = new Factura_Cabecera();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAllFacturaCabecera();
+    }
+
+    public async Task<List<Factura_Cabecera>> GetAllFacturaCabecera()
+    {
+        try
+        {
+            var url = oFacturaCabecera.URL_GetAllFacturaCabecera();
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+
+                    var options = new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        };
+
+                    lsFacturaCabecera = JsonSerializer.Deserialize<List<Factura_Cabecera>>(content, options);
+
+                    return lsFacturaCabecera;
+                }
+
+                return new List<Factura_Cabecera>();
+            }
+        }
+        catch (Exception ex)
+        {
+            return new List<Factura_Cabecera>();
+        }
+    }
+
+}

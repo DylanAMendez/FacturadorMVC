@@ -1,0 +1,161 @@
+﻿@page "/ClienteActualizarOEliminar/{IDCliente:int}"
+@using FacturadorMVC.Modelos
+
+@rendermode InteractiveServer
+
+
+<h3>Editar Cliente ID: @clienteEditando.Cli_ID</h3>
+
+<form @onsubmit="() => ActualizarCliente(clienteEditando.Cli_ID)">
+
+   <div style="display:flex; flex-direction:row; gap:5px;">
+        <div>
+            <label>Razon Social:</label>
+            <br />
+            <input type="text" @bind="clienteEditando.RazonSocial" />
+            <br />
+        </div>
+
+        <div>
+            <label>CUIT:</label>
+            <br />
+            <input type="text" @bind="clienteEditando.CUIT" />
+            <br />
+        </div>
+
+        <div>
+            <label>Dirección:</label>
+            <br />
+            <input type="text" @bind="clienteEditando.Direccion" />
+            <br />
+        </div>
+
+        <div>
+            <label>Deshabilitado:</label>
+            <br />
+            <input type="checkbox" @bind="clienteEditando.Deshabilitado" />
+        </div>
+   </div>
+
+    <br />
+    <br />
+
+    <button type="submit">Guardar cambios</button>
+    <button @onclick="() => EliminarCliente(clienteEditando.Cli_ID)">Eliminar</button>
+    <button style="margin-left:10px;"> <a href="/Clientes"> Cancelar </a> </button>
+
+</form>
+
+<p style="color:orange;">@msj</p>
+
+
+@code
+{
+    [Parameter]
+    public int IDCliente { get; set; }
+
+    Cliente oCliente = new Cliente();
+
+    Cliente clienteEditando = new Cliente();
+
+    string msj = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetClienteByID();
+    }
+
+    private async Task GetClienteByID()
+    {
+        var url = oCliente.URL_GetClienteByID(IDCliente);
+
+        using (HttpClient httpClient = new HttpClient())
+        {
+            var response = await httpClient.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+
+                clienteEditando = JsonSerializer.Deserialize<Cliente>(content, options);
+
+                StateHasChanged();
+            }
+        }
+    }
+
+    public async Task ActualizarCliente(int IDActualizar)
+    {
+        try
+        {
+            var url = oCliente.URL_ActualizarCliente(IDActualizar);
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var json = JsonSerializer.Serialize(clienteEditando);
+
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PutAsync(url, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var resultado = await response.Content.ReadAsStringAsync();
+
+                    msj = resultado;
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    msj = error;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+
+    }
+
+    public async Task EliminarCliente(int IDAEliminar)
+    {
+        try
+        {
+            var url = oCliente.URL_EliminarCliente(IDAEliminar);
+
+            using (HttpClient httpclient = new HttpClient())
+            {
+                var response = await httpclient.DeleteAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync();
+
+                    var msj = content.Result;
+
+                    clienteEditando = new Cliente();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+
+    }
+
+}

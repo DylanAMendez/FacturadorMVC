@@ -1,0 +1,58 @@
+﻿@page "/Clientes"
+
+@rendermode InteractiveServer
+@using System.Text.Json;
+@using FacturadorMVC.Modelos
+
+<h3>Listado de clientes</h3>
+
+
+<div style="display:flex; flex-direction:row;">
+    <p>Cli_ID</p> <p>Razon Social</p> <p>CUIT</p> <p>Direccion</p> <p>Deshabilitado</p>
+</div>
+
+@if (lsClientes.Count < 1 || lsClientes is null)
+{
+    <p>sin clientes</p>
+}
+else
+{
+    @foreach (var cliente in lsClientes)
+    {
+        <div style="display:flex; flex-direction: row; margin: 5px;">
+
+            <p>@cliente.Cli_ID</p>
+            <p>@cliente.RazonSocial</p>
+            <p>@cliente.CUIT</p>
+            <p>@cliente.Direccion</p>
+            <p>@cliente.Deshabilitado</p>
+
+            <div>
+                <a href="/ClienteActualizarOEliminar/@cliente.Cli_ID">  Editar  </a>
+                <a href="/ClienteActualizarOEliminar/@cliente.Cli_ID">  Eliminar  </a>
+            </div>
+
+        </div>
+    }
+
+    <div>
+        <a href="/ClienteNuevo">  Nuevo cliente  </a>
+    </div>
+
+}
+
+
+@code
+{
+
+    List<Cliente> lsClientes = new List<Cliente>();
+
+    Cliente oCliente = new Cliente();
+
+    protected override async Task OnInitializedAsync()
+    {
+        lsClientes = await oCliente.GetAllClientes();
+    }
+
+
+}

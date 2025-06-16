@@ -1,0 +1,86 @@
+﻿@page "/ArticuloNuevo"
+
+@using FacturadorMVC.Modelos
+@rendermode InteractiveServer
+
+<h3>Crear articulo </h3>
+
+<form>
+
+
+    <div>
+        <label>ART_ID:</label><br />
+        <input type="text" @bind="nuevoArticulo.ART_ID" />
+    </div>
+
+    <div>
+        <label>Cant:</label><br />
+        <input type="number" @bind="nuevoArticulo.Cant" />
+    </div>
+
+    <div>
+        <label>Precio:</label><br />
+        <input type="number" @bind="nuevoArticulo.Precio" />
+    </div>
+
+    <div>
+        <label>Moto:</label><br />
+        <input type="number" @bind="nuevoArticulo.Moto" />
+    </div>
+
+    <br />
+
+    <button @onclick="AddArticulo"> Crear articulo </button>
+    <button style="margin-left:10px;"> <a href="/Articulos"> Cancelar </a> </button>
+
+
+</form>
+
+<p style="color:orange;">@msj</p>
+
+@code 
+{
+
+    Articulo nuevoArticulo = new Articulo();
+
+    Articulo oArticulo = new Articulo();
+
+    string msj = "";
+
+    public async Task AddArticulo()
+    {
+        try
+        {
+            var url = oArticulo.URL_AddArticulo();
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var json = JsonSerializer.Serialize(nuevoArticulo);
+
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync(url, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var resultado = await response.Content.ReadAsStringAsync();
+                    msj = resultado;
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    msj = error;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+}

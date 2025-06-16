@@ -1,0 +1,53 @@
+﻿@page "/FacturaDetalle"
+
+<h3>FacturaDetalle</h3>
+
+@rendermode InteractiveServer
+@using FacturadorMVC.Modelos
+@using System.Text.Json;
+
+@if (lsFacturaDetalle.Count < 1 || lsFacturaDetalle is null)
+{
+    <p>sin factura detalle</p>
+}
+else
+{
+    @foreach (var facturaDetalle in lsFacturaDetalle)
+    {
+        <div style="display:flex; flex-direction: row; margin: 5px;">
+
+            <p>@facturaDetalle.Fact_ID</p>
+            <p>@facturaDetalle.FC_DTL_ID</p>
+            <p>@facturaDetalle.FechaAlta</p>
+            <p>@facturaDetalle.ART_ID</p>
+            <p>@facturaDetalle.Cant</p>
+            <p>@facturaDetalle.Precio</p>
+            <p>@facturaDetalle.Moto</p>
+
+            <div>
+                <a href="/FacturaDetalleActualizarOEliminar/@facturaDetalle.FC_DTL_ID">  Editar  </a>
+                <a href="/FacturaDetalleActualizarOEliminar/@facturaDetalle.FC_DTL_ID">  Eliminar  </a>
+            </div>
+
+        </div>
+    }
+
+    <div>
+        <a href="/FacturaDetalleNuevo">  Nueva factura detalle  </a>
+    </div>
+
+}
+
+@code 
+{
+
+    List<Factura_Detalle> lsFacturaDetalle = new List<Factura_Detalle>();
+
+    Factura_Detalle oFacturaDetalle = new Factura_Detalle();
+
+    protected override async Task OnInitializedAsync()
+    {
+        lsFacturaDetalle = await oFacturaDetalle.GetAllFacturaDetalle();
+    }
+
+}

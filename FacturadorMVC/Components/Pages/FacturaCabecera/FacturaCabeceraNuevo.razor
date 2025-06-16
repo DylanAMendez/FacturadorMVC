@@ -1,0 +1,78 @@
+﻿@page "/FacturaCabeceraNuevo"
+
+@using FacturadorMVC.Modelos
+@rendermode InteractiveServer
+
+<h3>Crear factura cabecera </h3>
+
+<form>
+
+    <div>
+        <label>Razon Social:</label><br />
+        <input type="date" @bind="nuevoFacturaCabecera.FechaAlta" />
+    </div>
+
+    <div>
+        <label>CUIT:</label><br />
+        <input type="text" @bind="nuevoFacturaCabecera.Cli_ID" />
+    </div>
+
+    <div>
+        <label>Dirección:</label><br />
+        <input type="text" @bind="nuevoFacturaCabecera.Estado" />
+    </div>
+
+    <br />
+
+    <button @onclick="AddCliente">Crear factura cabecera</button>
+    <button style="margin-left:10px;"> <a href="/FacturaCabecera"> Cancelar </a> </button>
+
+</form>
+
+<p style="color:orange;">@msj</p>
+
+@code 
+{
+    Factura_Cabecera nuevoFacturaCabecera = new Factura_Cabecera();
+
+    Factura_Cabecera oFacturaCabecera = new Factura_Cabecera();
+
+    string msj = "";
+
+    public async Task AddCliente()
+    {
+        try
+        {
+            var url = oFacturaCabecera.URL_AddFacturaCabecera();
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var json = JsonSerializer.Serialize(nuevoFacturaCabecera);
+
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PostAsync(url, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var resultado = await response.Content.ReadAsStringAsync();
+                    msj = resultado;
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+                    msj = error;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+}

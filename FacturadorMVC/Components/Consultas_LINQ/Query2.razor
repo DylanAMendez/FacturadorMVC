@@ -1,0 +1,51 @@
+﻿@page "/Query2"
+
+@using FacturadorMVC.Modelos
+@rendermode InteractiveServer
+
+<h3>Query2</h3>
+
+<button @onclick="EjecturarQuery"> Ejecturar Query2 </button>
+
+@if (lsFacturaCabecera.Count < 1)
+{
+    <p> sin datos </p>
+}
+else
+{
+    foreach (var cliente in lsFacturaCabecera)
+    {
+        <br />
+
+        <div style="display: flex; flex-direction:row; gap:5px;">
+
+        <p>@cliente.FC_ID</p>
+        <p>@cliente.FechaAlta</p>
+        <p>@cliente.Cli_ID</p>
+        <p>@cliente.Estado</p>
+
+        </div>
+
+        <br />
+
+    }
+}
+
+@code
+{
+
+    // Query2: Listar las facturas de los clientes cuyo cuit termine en 8.
+
+    Factura_Cabecera oFacturaCabecera = new Factura_Cabecera();
+    List<Factura_Cabecera> lsFacturaCabecera = new List<Factura_Cabecera>();
+
+    decimal resultadoQuery = 0m;
+
+    private async Task EjecturarQuery()
+    {
+        lsFacturaCabecera = await oFacturaCabecera.GetQuery2();
+
+        StateHasChanged();
+    }
+
+}

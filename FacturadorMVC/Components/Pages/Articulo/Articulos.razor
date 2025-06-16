@@ -1,0 +1,85 @@
+﻿@page "/Articulos"
+
+@rendermode InteractiveServer
+@using FacturadorMVC.Modelos
+@using System.Text.Json;
+
+<h3>Articulos</h3>
+
+@if (lsArticulos.Count < 1 || lsArticulos is null)
+{
+    <p>sin factura detalle</p>
+}
+else
+{
+    @foreach (var articulo in lsArticulos)
+    {
+        <div style="display:flex; flex-direction: row; margin: 5px;">
+
+            <p>@articulo.Articulo_ID</p>
+            <p>@articulo.ART_ID</p>
+            <p>@articulo.Cant</p>
+            <p>@articulo.Precio</p>
+            <p>@articulo.Moto</p>
+
+            <div>
+                <a href="/ArticuloActualizarOEliminar/@articulo.Articulo_ID">  Editar  </a>
+                <a href="/ArticuloActualizarOEliminar/@articulo.Articulo_ID">  Eliminar  </a>
+            </div>
+
+        </div>
+    }
+
+    <div>
+        <a href="/ArticuloNuevo">  Nueva articulo </a>
+    </div>
+
+}
+
+@code 
+{
+
+    List<Articulo> lsArticulos = new List<Articulo>();
+
+    Articulo oArticulo = new Articulo();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetAllArticulos();
+    }
+
+    public async Task<List<Articulo>> GetAllArticulos()
+    {
+        try
+        {
+            var url = oArticulo.URL_GetAllArticulos();
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var response = await httpClient.GetAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = await response.Content.ReadAsStringAsync();
+
+                    var options = new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true
+                        };
+
+                    lsArticulos = JsonSerializer.Deserialize<List<Articulo>>(content, options);
+
+                    return lsArticulos;
+                }
+
+                return new List<Articulo>();
+            }
+        }
+        catch (Exception ex)
+        {
+            return new List<Articulo>();
+        }
+    }
+
+
+}

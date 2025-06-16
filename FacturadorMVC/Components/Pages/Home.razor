@@ -1,0 +1,50 @@
+﻿@page "/"
+
+@rendermode InteractiveServer
+
+<PageTitle>Home</PageTitle>
+
+<h1>Hello, world!</h1>
+
+Welcome to your new app.
+
+@if (!mostrarRegistros)
+{
+    <div>
+        <button @onclick="MostrarRegistros">MENU</button>
+    </div>
+}
+
+
+@if (mostrarRegistros)
+{
+    <div style="display:flex; flex-direction:column; text-align:center; border: solid 1px royalblue; gap:5px;">
+
+        <a href="/Clientes">Clientes</a>
+        <a href="/FacturaCabecera">Factura_Cabecera</a>
+        <a href="/FacturaDetalle">Factura_Detalle</a>
+        <a href="/Articulos">Articulo</a>
+
+        <br />
+
+        <a href="/Query1">Query1</a>
+        <a href="/Query2">Query2</a>
+        <a href="/Query3">Query3</a>
+
+    </div>
+}
+
+
+@code
+{
+
+    bool mostrarRegistros = false;
+
+    public void MostrarRegistros()
+    {
+        mostrarRegistros = true;
+
+        StateHasChanged();
+    }
+
+}

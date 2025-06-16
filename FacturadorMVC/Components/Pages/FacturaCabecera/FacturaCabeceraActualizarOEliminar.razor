@@ -1,0 +1,156 @@
+﻿@page "/FacturaCabeceraActualizarOEliminar/{IDActualizar:int}"
+
+@using FacturadorMVC.Modelos
+@rendermode InteractiveServer
+
+<h3>Editar factura cabecera ID: @oFacturaCabecera.FC_ID</h3>
+
+<form>
+
+    <div style="display:flex; flex-direction:row; gap:5px;">
+        <div>
+            <label>Fecha Alta:</label>
+            <br />
+            <input type="text" @bind="facturaCabeceraEditando.FechaAlta" />
+            <br />
+        </div>
+
+        <div>
+            <label>Cli_ID:</label>
+            <br />
+            <input type="text" @bind="facturaCabeceraEditando.Cli_ID" />
+            <br />
+        </div>
+
+        <div>
+            <label>Estado:</label>
+            <br />
+            <input type="text" @bind="facturaCabeceraEditando.Estado" />
+            <br />
+        </div>
+
+    </div>
+
+    <br />
+    <br />
+
+    <button @onclick="() => ActualizarFacturaCabecera(facturaCabeceraEditando.FC_ID)"> Guardar cambios </button>
+    <button @onclick="() => EliminarActualizarFacturaCabecera(facturaCabeceraEditando.FC_ID)"> Eliminar </button>
+    <button style="margin-left:10px;"> <a href="/FacturaCabecera"> Cancelar </a> </button>
+
+</form>
+
+<p style="color:orange;">@msj</p>
+
+
+@code 
+{
+    [Parameter]
+    public int IDActualizar { get; set; }
+
+    Factura_Cabecera oFacturaCabecera = new Factura_Cabecera();
+
+    Factura_Cabecera facturaCabeceraEditando = new Factura_Cabecera();
+
+    string msj = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetFacturaCabeceraByID();
+    }
+
+    private async Task GetFacturaCabeceraByID()
+    {
+        var url = oFacturaCabecera.URL_GetFacturaCabeceraByID(IDActualizar);
+
+        using (HttpClient httpClient = new HttpClient())
+        {
+            var response = await httpClient.GetAsync(url);
+
+            if (response.IsSuccessStatusCode)
+            {
+                var content = await response.Content.ReadAsStringAsync();
+
+                var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+
+                facturaCabeceraEditando = JsonSerializer.Deserialize<Factura_Cabecera>(content, options);
+
+                StateHasChanged();
+            }
+        }
+    }
+
+    public async Task ActualizarFacturaCabecera(int IDActualizar)
+    {
+        try
+        {
+            var url = oFacturaCabecera.URL_ActualizarFacturaCabecera(IDActualizar);
+
+            using (HttpClient httpClient = new HttpClient())
+            {
+                var json = JsonSerializer.Serialize(facturaCabeceraEditando);
+
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                var response = await httpClient.PutAsync(url, content);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var resultado = await response.Content.ReadAsStringAsync();
+
+                    msj = resultado;
+                }
+                else
+                {
+                    var error = await response.Content.ReadAsStringAsync();
+
+                    msj = error;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+
+    }
+
+    public async Task EliminarActualizarFacturaCabecera(int IDAEliminar)
+    {
+        try
+        {
+            var url = oFacturaCabecera.URL_EliminarFacturaCabecera(IDAEliminar);
+
+            using (HttpClient httpclient = new HttpClient())
+            {
+                var response = await httpclient.DeleteAsync(url);
+
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync();
+
+                    var msj = content.Result;
+
+                    facturaCabeceraEditando = new Factura_Cabecera();
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+
+    }
+
+}

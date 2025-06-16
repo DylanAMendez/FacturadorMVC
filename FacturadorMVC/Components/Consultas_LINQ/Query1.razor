@@ -1,0 +1,44 @@
+﻿@page "/Query1"
+
+@using FacturadorMVC.Modelos
+@rendermode InteractiveServer
+
+<h3>Query1</h3>
+
+<button @onclick="EjecturarQuery"> Ejecturar Query1 </button>
+
+@if(resultadoQuery > 0)
+{
+    <p>Query OK</p>
+    <p>query1 :  @resultadoQuery</p>
+}
+else if(resultadoQuery < 0)
+{
+    <p>Error</p>
+}
+
+@code 
+{
+
+    //     1. Query1: Realizar la suma del monto de las facturas realizadas el mes anterior
+    // donde los montos facturados superen los 10000.
+
+    Factura_Detalle oFacturaDetalle = new Factura_Detalle();
+
+    decimal resultadoQuery = 0m;
+
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     resultadoQuery =  await oFacturaDetalle.GetQuery1();
+    // }
+
+    private async Task<decimal> EjecturarQuery()
+    {
+        resultadoQuery = await oFacturaDetalle.GetQuery1();
+
+        StateHasChanged();
+
+        return resultadoQuery;
+    }
+
+}
