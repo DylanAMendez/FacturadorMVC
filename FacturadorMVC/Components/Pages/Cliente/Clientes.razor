@@ -8,10 +8,19 @@
 
 <br />
 
-<input type="text" @bind=cuitABuscar />
-<button @onclick="() => BuscarPorCuit()"> Buscar CUIT </button>
+<div>
+    <input type="text" @bind=cuitABuscar />
+    <button @onclick="() => BuscarPorCuit()"> Buscar CUIT </button>
+    
+    <button @onclick="() => DeshabilitarClientes()"> Deshabilitar clientes razón social empiece con Distribuidora. </button>
+
+</div>
 
 <br />
+
+
+<p style="color:orange;">@msj</p>
+
 
 
 <div style="display:flex; flex-direction:row;">
@@ -57,6 +66,7 @@ else
     Cliente oCliente = new Cliente();
 
     string cuitABuscar = "";
+    string msj = "";
 
     protected override async Task OnInitializedAsync()
     {
@@ -79,7 +89,50 @@ else
         }
         catch (Exception ex)
         {
-            
+
+        }
+    }
+
+    // Deshabilitar clientes para los que la razón social empiece con la palabra Distribuidora.
+    public async Task DeshabilitarClientes()
+    {
+        try
+        {
+            var lsAllClientesDistribuidora = lsClientes.Where(x => x.RazonSocial.StartsWith("Distribuidora")).ToList();
+
+            if (lsAllClientesDistribuidora.Count < 0) return;
+
+            foreach(var cliente in lsAllClientesDistribuidora)
+            {
+                var url = oCliente.URL_ActualizarCliente(cliente.Cli_ID);
+
+                if (cliente.Deshabilitado) continue;
+
+                cliente.Deshabilitado = true;
+
+                using (HttpClient httpClient = new HttpClient())
+                {
+                    var json = JsonSerializer.Serialize(cliente);
+
+                    var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
+
+                    var response = await httpClient.PutAsync(url, content);
+
+                    if(response.IsSuccessStatusCode)
+                    {
+                        var resultado = await response.Content.ReadAsStringAsync();
+
+                        msj += " " + resultado + " ";
+                    }
+
+                }
+
+            }
+
+        }
+        catch (Exception ex)
+        {
+            msj = "Error : " + ex.Message;
         }
     }
 
