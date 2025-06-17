@@ -12,11 +12,11 @@ namespace FacturadorMVC.Modelos
         public string Estado { get; set; }
 
 
-        public string URL_GetAllFacturaCabecera() => "https://localhost:7066/api/Factura_Cabecera";
-        public string URL_AddFacturaCabecera() => "https://localhost:7066/api/Factura_Cabecera";
-        public string URL_ActualizarFacturaCabecera(int IDActualizar) => $"https://localhost:7066/api/Factura_Cabecera/{IDActualizar}";
-        public string URL_EliminarFacturaCabecera(int IDAEliminar) => $"https://localhost:7066/api/Factura_Cabecera/{IDAEliminar}";
-        public string URL_GetFacturaCabeceraByID(int IDABuscar) => $"https://localhost:7066/api/Factura_Cabecera/{IDABuscar}";
+        public string URL_GetAllFacturaCabecera() => "https://localhost:7097/api/Factura_Cabecera";
+        public string URL_AddFacturaCabecera() => "https://localhost:7097/api/Factura_Cabecera";
+        public string URL_ActualizarFacturaCabecera(int IDActualizar) => $"https://localhost:7097/api/Factura_Cabecera/{IDActualizar}";
+        public string URL_EliminarFacturaCabecera(int IDAEliminar) => $"https://localhost:7097/api/Factura_Cabecera/{IDAEliminar}";
+        public string URL_GetFacturaCabeceraByID(int IDABuscar) => $"https://localhost:7097/api/Factura_Cabecera/{IDABuscar}";
 
 
         public async Task<List<Factura_Cabecera>> GetAllFacturaCabecera()

@@ -11,10 +11,10 @@
         public string? Nombre { get; set; } = "";
 
 
-        public string URL_GetAllArticulos() => "https://localhost:7066/api/Articulo";
-        public string URL_AddArticulo() => "https://localhost:7066/api/Articulo";
-        public string URL_ActualizarArticulo(int IDActualizar) => $"https://localhost:7066/api/Articulo/{IDActualizar}";
-        public string URL_EliminarArticulo(int IDAEliminar) => $"https://localhost:7066/api/Articulo/{IDAEliminar}";
-        public string URL_GetArticuloByID(int IDABuscar) => $"https://localhost:7066/api/Articulo/{IDABuscar}";
+        public string URL_GetAllArticulos() => "https://localhost:7097/api/Articulo";
+        public string URL_AddArticulo() => "https://localhost:7097/api/Articulo";
+        public string URL_ActualizarArticulo(int IDActualizar) => $"https://localhost:7097/api/Articulo/{IDActualizar}";
+        public string URL_EliminarArticulo(int IDAEliminar) => $"https://localhost:7097/api/Articulo/{IDAEliminar}";
+        public string URL_GetArticuloByID(int IDABuscar) => $"https://localhost:7097/api/Articulo/{IDABuscar}";
     }
 }

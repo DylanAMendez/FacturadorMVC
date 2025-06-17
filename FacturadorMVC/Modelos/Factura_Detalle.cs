@@ -20,11 +20,11 @@ namespace FacturadorMVC.Modelos
         public decimal Moto { get; set; }
 
 
-        public string URL_GetAllFactura_Detalle() => "https://localhost:7066/api/Factura_Detalle/GetAllFacturaDetalle";
-        public string URL_AddFactura_Detalle() => "https://localhost:7066/api/Factura_Detalle/AddFacturaDetalle";
-        public string URL_ActualizarFactura_Detalle(int IDActualizar) => $"https://localhost:7066/api/Factura_Detalle/{IDActualizar}";
-        public string URL_EliminarFactura_Detalle(int IDAEliminar) => $"https://localhost:7066/api/Factura_Detalle/{IDAEliminar}";
-        public string URL_GetFactura_DetalleByID(int IDABuscar) => $"https://localhost:7066/api/Factura_Detalle/{IDABuscar}";
+        public string URL_GetAllFactura_Detalle() => "https://localhost:7097/api/Factura_Detalle/GetAllFacturaDetalle";
+        public string URL_AddFactura_Detalle() => "https://localhost:7097/api/Factura_Detalle/AddFacturaDetalle";
+        public string URL_ActualizarFactura_Detalle(int IDActualizar) => $"https://localhost:7097/api/Factura_Detalle/{IDActualizar}";
+        public string URL_EliminarFactura_Detalle(int IDAEliminar) => $"https://localhost:7097/api/Factura_Detalle/{IDAEliminar}";
+        public string URL_GetFactura_DetalleByID(int IDABuscar) => $"https://localhost:7097/api/Factura_Detalle/{IDABuscar}";
 
 
         public async Task<List<Factura_Detalle>> GetAllFacturaDetalle()

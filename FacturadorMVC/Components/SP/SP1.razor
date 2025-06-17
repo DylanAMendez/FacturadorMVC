@@ -41,7 +41,7 @@
             var FechaDesdeAEnviar = FechaDesde.ToString("yyyy-MM-dd");
             var FechaHastaAEnviar = FechaHasta.ToString("yyyy-MM-dd");
 
-            var url = $"https://localhost:7066/api/SP/SP1/{FechaDesdeAEnviar}/{FechaHastaAEnviar}/{IDCliente}";
+            var url = $"https://localhost:7097/api/SP/SP1/{FechaDesdeAEnviar}/{FechaHastaAEnviar}/{IDCliente}";
 
             using (HttpClient httpClient = new HttpClient())
             {

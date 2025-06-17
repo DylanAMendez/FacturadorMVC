@@ -6,6 +6,13 @@
 
 <h3>Listado de clientes</h3>
 
+<br />
+
+<input type="text" @bind=cuitABuscar />
+<button @onclick="() => BuscarPorCuit()"> Buscar CUIT </button>
+
+<br />
+
 
 <div style="display:flex; flex-direction:row;">
     <p>Cli_ID</p> <p>Razon Social</p> <p>CUIT</p> <p>Direccion</p> <p>Deshabilitado</p>
@@ -49,9 +56,31 @@ else
 
     Cliente oCliente = new Cliente();
 
+    string cuitABuscar = "";
+
     protected override async Task OnInitializedAsync()
     {
         lsClientes = await oCliente.GetAllClientes();
+    }
+
+    public async Task BuscarPorCuit()
+    {
+        try
+        {
+            if (cuitABuscar == "")
+            {
+                lsClientes = await oCliente.GetAllClientes();
+                return;
+            }
+            var lsClientesContienenCUIT = lsClientes.Where(x => x.CUIT.Contains(cuitABuscar, StringComparison.OrdinalIgnoreCase)).ToList();
+
+            lsClientes = lsClientesContienenCUIT;
+
+        }
+        catch (Exception ex)
+        {
+            
+        }
     }
 
 

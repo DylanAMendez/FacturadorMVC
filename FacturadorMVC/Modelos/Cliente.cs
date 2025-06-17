@@ -14,11 +14,11 @@ namespace FacturadorMVC.Modelos
         public bool Deshabilitado { get; set; }
 
 
-        public string URL_GetAllClientes() => "https://localhost:7066/api/Cliente/GetAllClientes";
-        public string URL_AddCliente() => "https://localhost:7066/api/Cliente/AddCliente";
-        public string URL_ActualizarCliente(int IDActualizar) => $"https://localhost:7066/api/Cliente/{IDActualizar}";
-        public string URL_EliminarCliente(int IDAEliminar) => $"https://localhost:7066/api/Cliente/{IDAEliminar}";
-        public string URL_GetClienteByID(int IDABuscar) => $"https://localhost:7066/api/Cliente/GetClienteByID/{IDABuscar}";
+        public string URL_GetAllClientes() => "https://localhost:7097/api/Cliente/GetAllClientes";
+        public string URL_AddCliente() => "https://localhost:7097/api/Cliente/AddCliente";
+        public string URL_ActualizarCliente(int IDActualizar) => $"https://localhost:7097/api/Cliente/{IDActualizar}";
+        public string URL_EliminarCliente(int IDAEliminar) => $"https://localhost:7097/api/Cliente/{IDAEliminar}";
+        public string URL_GetClienteByID(int IDABuscar) => $"https://localhost:7097/api/Cliente/GetClienteByID/{IDABuscar}";
 
         public async Task<List<Cliente>> GetAllClientes()
         {
